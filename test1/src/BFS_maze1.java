@@ -16,6 +16,7 @@ public class BFS_maze1 {
     static int n,m;
     static char[][] map= new char[MAXV][MAXV];
     static boolean[][] inqueue=new boolean[MAXV][MAXV];
+    static node[][]path=new node[MAXV][MAXV];
     static int result=-1;
     static int[][]move={{-1,0},{1,0},{0,-1},{0,1}};
 
@@ -24,10 +25,15 @@ public class BFS_maze1 {
         q.add(new node(x,y,0));
         inqueue[x][y]=true;
         while (!q.isEmpty()){
+            /**
+             * judge after polling the queue
+             */
             node temp=q.poll();
 
             if(map[temp.x][temp.y]=='T'){
                 result=temp.step;
+                System.out.println("the most shortest path length: "+result);
+                printpath(temp,x,y);
                 return;
             }
 
@@ -38,12 +44,31 @@ public class BFS_maze1 {
                 if(check(nx,ny)){
                     q.offer(new node(nx,ny,step));
                     inqueue[nx][ny]=true;
+                    path[nx][ny]=temp;
                 }
             }
         }
+        System.out.println("no path found!");
     }
 
+    static void printpath(node end,int startx,int starty){
+        Stack<node> pathstack=new Stack<node>();
+        pathstack.push(end);
+        int prenodex=end.x;
+        int prenodey=end.y;
 
+        while(prenodex!=startx&&prenodey!=starty){
+            node prenode=path[prenodex][prenodey];
+            pathstack.push(prenode);
+            prenodex=prenode.x;
+            prenodey=prenode.y;
+        }
+        pathstack.push(new node(startx,starty,0));
+        while(!pathstack.empty()){
+            node outnode=pathstack.pop();
+            System.out.println("("+outnode.x+','+outnode.y+")");
+        }
+    }
 
     static boolean check(int x,int y){
         if(x>=0&&x<n&&y>=0&&y<n&&!inqueue[x][y]&&map[x][y]!='#'){
@@ -51,9 +76,6 @@ public class BFS_maze1 {
         }
         return false;
     }
-
-
-
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -71,6 +93,5 @@ public class BFS_maze1 {
             map[i]=s.toCharArray();
         }
         bfs(x,y);
-        System.out.println(result);
     }
 }
