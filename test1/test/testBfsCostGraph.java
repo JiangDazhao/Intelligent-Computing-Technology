@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class BfsCostGraph {
+public class testBfsCostGraph {
     static int graph[][];
     static int pointnum;
     static int start;
@@ -36,11 +36,18 @@ public class BfsCostGraph {
 
 
     public static void main(String[] args) throws IOException, CloneNotSupportedException {
-        System.out.println("输入图像节点数目：");
         Scanner sc=new Scanner(System.in);
-        pointnum=sc.nextInt();
-        System.out.println("生成的图像邻接矩阵为：");
-        graph=createGraph(pointnum);
+        graph= new int[][]{
+                {0,0,0,0,0,0,0,0,0},
+                {0,0,3,4,0,0,0,0,0},
+                {0,0,0,0,2,0,0,0,0},
+                {0,0,0,0,0,4,5,0,0},
+                {0,0,0,0,0,0,0,3,4},
+                {0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0},
+                {0,0,0,0,0,0,0,0,0},
+        };
         System.out.println("输入起点和终点：");
         start=sc.nextInt();
         end=sc.nextInt();
@@ -85,6 +92,22 @@ public class BfsCostGraph {
         LinkedList<CloseElement> closetable= new LinkedList<CloseElement>();
         opentable.add(new OpenElement(start,0,0));
         while(!opentable.isEmpty()){
+
+            Iterator<OpenElement> itr = opentable.iterator();
+            System.out.print("opentable:");
+            while (itr.hasNext()){
+                OpenElement it=itr.next();
+                System.out.print(it.pointindex+" ");
+            }
+
+            Iterator<CloseElement> itr2 = closetable.iterator();
+            System.out.print("closetable:");
+            while (itr2.hasNext()){
+                CloseElement it=itr2.next();
+                System.out.print(it.pointindex+" ");
+            }
+            System.out.println();
+
             Collections.sort(opentable,new OpenElementComparator());
             preopentable=cloneOpenTable(opentable);
             OpenElement top= opentable.removeFirst();
@@ -125,14 +148,14 @@ public class BfsCostGraph {
     }
 
     public static CloseElement findCloseElementByIdx(LinkedList<CloseElement> table,int pointidx){
-       Iterator<CloseElement> iter=table.iterator();
-       while (iter.hasNext()){
-           CloseElement itnext=iter.next();
-           if(itnext.pointindex==pointidx){
-               return itnext;
-           }
-       }
-       return null;
+        Iterator<CloseElement> iter=table.iterator();
+        while (iter.hasNext()){
+            CloseElement itnext=iter.next();
+            if(itnext.pointindex==pointidx){
+                return itnext;
+            }
+        }
+        return null;
     }
 
     public static OpenElement findOpenElementByIdx(LinkedList<OpenElement> table,int pointidx){
