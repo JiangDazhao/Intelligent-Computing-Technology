@@ -34,7 +34,6 @@ public class BfsCostGraph {
         }
     }
 
-
     public static void main(String[] args) throws IOException, CloneNotSupportedException {
         System.out.println("输入图像节点数目：");
         Scanner sc=new Scanner(System.in);
@@ -45,9 +44,7 @@ public class BfsCostGraph {
         start=sc.nextInt();
         end=sc.nextInt();
         bfsCost(graph,start,end);
-
     }
-
 
     public static int[][] createGraph(int pointnum) throws IOException {
         int[][]graph=new int[pointnum+1][pointnum+1];
