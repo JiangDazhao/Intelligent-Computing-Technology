@@ -7,6 +7,9 @@ public class BfsCostGraph {
     static int start;
     static int end;
 
+    /**
+     * opentable中的元素
+     */
     static class OpenElement implements Cloneable{
         int pointindex;
         int fatherindex;
@@ -24,6 +27,9 @@ public class BfsCostGraph {
         }
     }
 
+    /**
+     * closetable中的元素
+     */
     static class CloseElement{
         int pointindex;
         int fatherindex;
@@ -34,18 +40,30 @@ public class BfsCostGraph {
         }
     }
 
+    /**
+     * 主函数
+     * @param args
+     * @throws IOException
+     * @throws CloneNotSupportedException
+     */
     public static void main(String[] args) throws IOException, CloneNotSupportedException {
-        System.out.println("输入图像节点数目：");
+        System.out.println("Input the pointnum：");
         Scanner sc=new Scanner(System.in);
         pointnum=sc.nextInt();
-        System.out.println("生成的图像邻接矩阵为：");
+        System.out.println("Graph：");
         graph=createGraph(pointnum);
-        System.out.println("输入起点和终点：");
+        System.out.println("Input start and end index：");
         start=sc.nextInt();
         end=sc.nextInt();
         bfsCost(graph,start,end);
     }
 
+    /**
+     * 根据输入节点数量随机生成图像邻接矩阵
+     * @param pointnum
+     * @return
+     * @throws IOException
+     */
     public static int[][] createGraph(int pointnum) throws IOException {
         int[][]graph=new int[pointnum+1][pointnum+1];
         File file= new File("resources/graph.txt");
@@ -76,11 +94,23 @@ public class BfsCostGraph {
         return graph;
     }
 
+    /**
+     *Bfs搜索过程
+     * @param graph 邻接矩阵
+     * @param start 开始结点
+     * @param end   结束结点
+     * @throws CloneNotSupportedException
+     */
     public static void bfsCost(int [][]graph,int start,int end) throws CloneNotSupportedException {
         LinkedList<OpenElement> opentable=new LinkedList<OpenElement>();
         LinkedList<OpenElement> preopentable=new LinkedList<OpenElement>();
         LinkedList<CloseElement> closetable= new LinkedList<CloseElement>();
         opentable.add(new OpenElement(start,0,0));
+        /**
+         *当Open表不为空时，从中找出cost最小的openelement（标记为top）放入close表中：
+         * 如果top序号为end则结束，否则判断是否可拓展
+         * 若可拓展则将拓展节点更新cost并加入opentable，不可拓展则continue
+         */
         while(!opentable.isEmpty()){
             Collections.sort(opentable,new OpenElementComparator());
             preopentable=cloneOpenTable(opentable);
@@ -106,6 +136,9 @@ public class BfsCostGraph {
         }
     }
 
+    /**
+     * 实现容器中的实例排序Comparator
+     */
     public static class OpenElementComparator implements Comparator<OpenElement>{
         @Override
         public int compare(OpenElement o1, OpenElement o2) {
@@ -113,6 +146,12 @@ public class BfsCostGraph {
         }
     }
 
+    /**
+     * 深度拷贝opentable
+     * @param opentable
+     * @return
+     * @throws CloneNotSupportedException
+     */
     public static LinkedList<OpenElement> cloneOpenTable(LinkedList<OpenElement>opentable) throws CloneNotSupportedException {
         LinkedList<OpenElement> result=new LinkedList<>();
         for(OpenElement openelement:opentable){
@@ -121,6 +160,12 @@ public class BfsCostGraph {
         return result;
     }
 
+    /**
+     * 通过序号idx查找closetable中的元素
+     * @param table
+     * @param pointidx
+     * @return
+     */
     public static CloseElement findCloseElementByIdx(LinkedList<CloseElement> table,int pointidx){
        Iterator<CloseElement> iter=table.iterator();
        while (iter.hasNext()){
@@ -132,6 +177,12 @@ public class BfsCostGraph {
        return null;
     }
 
+    /**
+     * 通过idx查找opentable中的元素
+     * @param table
+     * @param pointidx
+     * @return
+     */
     public static OpenElement findOpenElementByIdx(LinkedList<OpenElement> table,int pointidx){
         Iterator<OpenElement> iter=table.iterator();
         while (iter.hasNext()){
@@ -143,6 +194,12 @@ public class BfsCostGraph {
         return null;
     }
 
+    /**
+     * 判断结点是否可拓展
+     * @param graph 邻接矩阵图像
+     * @param pointnum 结点序号
+     * @return
+     */
     public static boolean canExtend(int graph[][],int pointnum){
         for(int i=1;i<=graph[0].length-1;i++){
             if(graph[pointnum][i]!=0){
@@ -152,6 +209,13 @@ public class BfsCostGraph {
         return false;
     }
 
+    /**
+     * 打印路径，从终止结点到开始结点，入栈再弹栈
+     * @param graph
+     * @param closetable
+     * @param start
+     * @param end
+     */
     public static void printPath(int graph[][],LinkedList<CloseElement> closetable,int start,int end){
         Stack<CloseElement> pathStack=new Stack<CloseElement>();
         CloseElement closeNode=findCloseElementByIdx(closetable,end);
@@ -174,6 +238,6 @@ public class BfsCostGraph {
             preIdx=nextIdx;
         }
         System.out.println();
-        System.out.println("最短路径长度为:"+cost);
+        System.out.println("The shortest cost is:"+cost);
     }
 }
