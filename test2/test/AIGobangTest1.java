@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class AIGobangTest1 {
     //3×ÓÆå
-    final int maxDepth=2;
+    final int MAX_DEPTH=2;
     final int SIZE=3;
     int[][] arr=new int[SIZE][SIZE];
     int count=0;
@@ -21,7 +21,7 @@ public class AIGobangTest1 {
     }
 
     public TempNode  dfs(int dp,int alpha,int beta){
-        if (dp==maxDepth || count==SIZE*SIZE){
+        if (dp==MAX_DEPTH || count==SIZE*SIZE){
             TempNode node=new TempNode(getValue(arr,dp));
             return node;
         }
