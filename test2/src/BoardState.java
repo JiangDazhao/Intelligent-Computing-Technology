@@ -13,9 +13,9 @@ public class BoardState{
     static final int DRAW=5000;
 
     int[][]board;
-    //生成博弈树的人
+    //生成博弈树的角色
     int mainPlayerTurn;
-    //要落子的人
+    //要落子的角色
     int playerTurn;
     int x;
     int y;
