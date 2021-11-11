@@ -21,22 +21,26 @@ public class BoardState{
     int mainPlayerTurn;
     //要落子的人
     int playerTurn;
+    int x;
+    int y;
+
+    public BoardState(int[][] board, int mainPlayerTurn, int playerTurn, int x, int y, int depth, int alpha, int beta, int value) {
+        this.board = board;
+        this.mainPlayerTurn = mainPlayerTurn;
+        this.playerTurn = playerTurn;
+        this.x = x;
+        this.y = y;
+        this.depth = depth;
+        this.alpha = alpha;
+        this.beta = beta;
+        this.value = value;
+    }
+
     int depth;
-    BoardState chosenState;
     int alpha=MIN_VAL;
     int beta=MAX_VAL;
     int value=0;
 
-    public BoardState(int[][] board, int mainPlayerTurn, int playerTurn, int depth, BoardState chosenState, int alpha, int beta,int value) {
-        this.board = board;
-        this.mainPlayerTurn = mainPlayerTurn;
-        this.playerTurn = playerTurn;
-        this.depth = depth;
-        this.chosenState = chosenState;
-        this.alpha = alpha;
-        this.beta = beta;
-        this.value=value;
-    }
 
     /**
      * 进行递归搜索
@@ -70,15 +74,18 @@ public class BoardState{
             for (int i=0;i<availablePos.size();i++){
                 Pair<Integer, Integer>pos=availablePos.get(i);
                 //max结点刚刚落子
-                int [][] newboard= Utils.generateNewBoard(this.board,pos.getKey(),pos.getValue(),mainPlayerTurn);
+                int x=pos.getKey();
+                int y=pos.getValue();
+                int [][] newboard= Utils.generateNewBoard(this.board,x,y,mainPlayerTurn);
                 BoardState childState = new BoardState(newboard,this.mainPlayerTurn,
-                        Utils.changePlayerTurn(this.playerTurn),this.depth+1,null,this.alpha,this.beta,0);
+                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta,0);
                 int childScore=childState.getScore();
 
                 if (childScore>maxScore){
                     maxScore=childScore;
                     maxIndex=i;
-                    this.chosenState=childState;
+                    this.x=childState.x;
+                    this.y=childState.y;
                     this.alpha=maxScore;
                 }
 
