@@ -19,8 +19,10 @@ public class BoardState{
     int playerTurn;
     int x;
     int y;
-
-    public BoardState(int[][] board, int mainPlayerTurn, int playerTurn, int x, int y, int depth, int alpha, int beta, int value) {
+    int depth;
+    int alpha=MIN_VAL;
+    int beta=MAX_VAL;
+    public BoardState(int[][] board, int mainPlayerTurn, int playerTurn, int x, int y, int depth, int alpha, int beta) {
         this.board = board;
         this.mainPlayerTurn = mainPlayerTurn;
         this.playerTurn = playerTurn;
@@ -29,20 +31,13 @@ public class BoardState{
         this.depth = depth;
         this.alpha = alpha;
         this.beta = beta;
-        this.value = value;
     }
 
-    int depth;
-    int alpha=MIN_VAL;
-    int beta=MAX_VAL;
-    int value=0;
-
-
     /**
-     * 进行递归搜索
+     * 根据现有棋盘进行递归搜索
      * @return
      */
-    private int getScore(){
+    public int getScore(){
         int score=0;
         //终结游戏
         int winnerCheck=Utils.getCost(this.board,this.mainPlayerTurn);
@@ -68,12 +63,12 @@ public class BoardState{
             int maxScore=MIN_VAL;
             for (int i=0;i<availablePos.size();i++){
                 Pair<Integer, Integer>pos=availablePos.get(i);
-                //max所有可能的下子
+                //根据现有棋盘，max所有可能的下子
                 int x=pos.getKey();
                 int y=pos.getValue();
                 int [][] newboard= Utils.generateNewBoard(this.board,x,y,mainPlayerTurn);
                 BoardState childState = new BoardState(newboard,this.mainPlayerTurn,
-                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta,0);
+                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta);
                 //递归获取分数
                 int childScore=childState.getScore();
 
@@ -102,7 +97,7 @@ public class BoardState{
                 int y=pos.getValue();
                 int [][] newboard= Utils.generateNewBoard(this.board,x,y,Utils.changePlayerTurn(mainPlayerTurn));
                 BoardState childState = new BoardState(newboard,this.mainPlayerTurn,
-                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta,0);
+                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta);
                 int childScore=childState.getScore();
 
                 if (childScore<minScore){

@@ -6,14 +6,13 @@ public class AIGobangTest2 {
         final int MAX_VAL=10000;
         final int MIN_VAL=-10000;
         int[][] board={
-                {1,0,0,0,0},
-                {0,1,0,0,0},
-                {0,0,2,0,0},
-                {0,0,0,2,0},
-                {0,0,0,0,2},
+                {0,0,0,0,0},
+                {0,0,0,0,0},
+                {0,0,0,0,0},
+                {0,0,0,0,0},
+                {0,0,0,0,0},
         };
         int value=Utils.getCost(board,1);
-        System.out.println(value);
         Utils.printBoard(board);
     }
 }

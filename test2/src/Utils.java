@@ -13,7 +13,7 @@ public class Utils {
      * 棋盘的静态估值函数
      * @param board
      * @param playerTurn 估值的对象
-     * @return
+     * @return 赢了MAX_VAL,输了MIN_VAL,平局DRAW
      */
     static int getCost (int [][] board, int playerTurn){
         int myScore=0;
@@ -130,13 +130,14 @@ public class Utils {
             }
         }
         if(full==1&&!myRowWin&&!myRowLose&&!myColumnWin&&!myColumnLose&&!myDiagonalWin&&!myDiagonalLose){
-            return 5000;
+            return DRAW;
         }
 //        System.out.println("myscore is:"+myScore);
 //        System.out.println("yourscore is:"+yourScore);
         value = myScore - yourScore;
         return value;
     }
+
 
     /**
      * 改变下棋的人
@@ -197,11 +198,21 @@ public class Utils {
 
     /**
      * 数组转换为字符
-     * @param playerTurn
+     * @param num
      * @return
      */
-    static char numToChar(int playerTurn){
-        return (playerTurn==1)? 'O':'X';
+    static char numToChar(int num){
+        char result=' ';
+        if (num==1){
+            result= 'O';
+        }
+        if (num==2){
+            result= 'X';
+        }
+        if(num==0){
+            result= ' ';
+        }
+        return result;
     }
 
     /**
