@@ -1,14 +1,18 @@
+import javafx.util.Pair;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Utils {
     static final int BOARD_SIZE=5;
     static final int MAX_VAL=10000;
     static final int MIN_VAL=-10000;
+    static final int DRAW=5000;
 
     /**
      * 棋盘的静态估值函数
      * @param board
-     * @param playerTurn
+     * @param playerTurn 估值的对象
      * @return
      */
     static int getCost (int [][] board, int playerTurn){
@@ -126,7 +130,7 @@ public class Utils {
             }
         }
         if(full==1&&!myRowWin&&!myRowLose&&!myColumnWin&&!myColumnLose&&!myDiagonalWin&&!myDiagonalLose){
-            return 0;
+            return 5000;
         }
 //        System.out.println("myscore is:"+myScore);
 //        System.out.println("yourscore is:"+yourScore);
@@ -148,12 +152,13 @@ public class Utils {
      * @param board
      * @return
      */
-    static HashMap<Integer,Integer> availablePos(int [][]board){
-        HashMap<Integer,Integer>result=new HashMap<>();
+    static ArrayList<Pair<Integer,Integer>> getAvailablePos(int [][]board){
+        ArrayList<Pair<Integer,Integer>> result=new ArrayList<Pair<Integer,Integer>>();
+        int count=0;
         for (int i=0;i<board.length;i++){
             for (int j=0;j<board[0].length;j++){
                 if (board[i][j]==0) {
-                    result.put(i,j);
+                    result.add(new Pair<>(i,j));
                 }
             }
         }
@@ -169,10 +174,8 @@ public class Utils {
      * @return
      */
     static int[][] generateNewBoard(int[][]board,int row,int column,int playerTurn){
-        int[][] newBoard = new int[BOARD_SIZE][BOARD_SIZE];
-        for (int i=0;i<board.length;i++){
-            System.arraycopy(board[i],0,newBoard[i],0,newBoard[i].length);
-        }
+        int[][] newBoard;
+        newBoard=Utils.cloneBoard(board);
         newBoard[row][column]=playerTurn;
         return newBoard;
     }
@@ -201,4 +204,16 @@ public class Utils {
         return (playerTurn==1)? 'O':'X';
     }
 
+    /**
+     * 克隆棋盘
+     * @param fromBoard
+     * @return
+     */
+    static int[][] cloneBoard(int [][] fromBoard){
+        int[][] newBoard = new int[BOARD_SIZE][BOARD_SIZE];
+        for (int i=0;i<fromBoard.length;i++){
+            System.arraycopy(fromBoard[i],0,newBoard[i],0,newBoard[i].length);
+        }
+        return newBoard;
+    }
 }
