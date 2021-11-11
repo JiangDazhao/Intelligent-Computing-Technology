@@ -9,5 +9,9 @@ public class AIGobang {
     int[][] board=new int[BOARD_SIZE][BOARD_SIZE];
 
 
+    public static void main(String[] args) {
+
+    }
+
 
 }

@@ -1,13 +1,9 @@
 import javafx.util.Pair;
-import org.omg.PortableInterceptor.INACTIVE;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 /**
  * 用来表示当前棋盘的状态
- * @author jiangxuzhao
- * @date 2021/11/11
  */
 public class BoardState{
     static final int MAX_DEPTH=2;
@@ -47,7 +43,7 @@ public class BoardState{
      * @return
      */
     private int getScore(){
-
+        int score=0;
         //终结游戏
         int winnerCheck=Utils.getCost(this.board,this.mainPlayerTurn);
         if (winnerCheck==MAX_VAL){
@@ -70,22 +66,21 @@ public class BoardState{
         //max结点，返回的是子节点的最大值
         if (this.playerTurn==mainPlayerTurn){
             int maxScore=MIN_VAL;
-            int maxIndex=0;
             for (int i=0;i<availablePos.size();i++){
                 Pair<Integer, Integer>pos=availablePos.get(i);
-                //max结点刚刚落子
+                //max所有可能的下子
                 int x=pos.getKey();
                 int y=pos.getValue();
                 int [][] newboard= Utils.generateNewBoard(this.board,x,y,mainPlayerTurn);
                 BoardState childState = new BoardState(newboard,this.mainPlayerTurn,
                         Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta,0);
+                //递归获取分数
                 int childScore=childState.getScore();
 
                 if (childScore>maxScore){
                     maxScore=childScore;
-                    maxIndex=i;
-                    this.x=childState.x;
-                    this.y=childState.y;
+                    this.x=x;
+                    this.y=y;
                     this.alpha=maxScore;
                 }
 
@@ -94,13 +89,37 @@ public class BoardState{
                     break;
                 }
             }
-            return maxScore;
+            score= maxScore;
         }
 
         //min结点，返回的是子节点最小值
-        if(this.playerTurn==Utils.changePlayerTurn(mainPlayerTurn)){
+        else if(this.playerTurn==Utils.changePlayerTurn(mainPlayerTurn)){
+            int minScore=MAX_VAL;
+            for (int i=0;i<availablePos.size();i++){
+                Pair<Integer, Integer>pos=availablePos.get(i);
+                //min结点刚刚落子
+                int x=pos.getKey();
+                int y=pos.getValue();
+                int [][] newboard= Utils.generateNewBoard(this.board,x,y,Utils.changePlayerTurn(mainPlayerTurn));
+                BoardState childState = new BoardState(newboard,this.mainPlayerTurn,
+                        Utils.changePlayerTurn(this.playerTurn),-1,-1,this.depth+1,this.alpha,this.beta,0);
+                int childScore=childState.getScore();
 
+                if (childScore<minScore){
+                    minScore=childScore;
+                    this.x=x;
+                    this.y=y;
+                    this.beta=minScore;
+                }
+
+                //剪枝
+                if (this.alpha>=this.beta){
+                    break;
+                }
+            }
+            score=minScore;
         }
+        return score;
     }
 
 }
