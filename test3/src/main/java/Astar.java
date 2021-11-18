@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * A星算法
@@ -19,6 +16,12 @@ public class Astar {
     // 优先队列(升序)
     Queue<Node> openList = new PriorityQueue<Node>();
     List<Node> closeList = new ArrayList<Node>();
+
+    public Stack<Node> path = new Stack<Node>();
+
+    public Stack<Node> getPath() {
+        return path;
+    }
 
     /**
      * 入口函数
@@ -61,11 +64,16 @@ public class Astar {
         if(end==null||maps==null) {
             return;
         }
+        this.path.push(end);
         while (end != null)
         {
             Coord c = end.coord;
             maps[c.y][c.x] = PATH;
             end = end.parent;
+            if(end != null)
+            {
+                this.path.push(end);
+            }
         }
         System.out.println("行车总代价为："+result);
     }

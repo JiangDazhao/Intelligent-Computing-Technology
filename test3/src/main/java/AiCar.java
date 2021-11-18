@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 public class AiCar {
     public static void main(String[] args)
     {
@@ -13,9 +15,20 @@ public class AiCar {
         MapInfo info=new MapInfo(maps,maps[0].length, maps.length,new Node(0,maps.length-1), new Node(4, 5));
         System.out.println("地图为：");
         printMap(maps);
-        new Astar().start(info);
+        Astar astar=new Astar();
+        astar.start(info);
+        int[][] finalMaps=info.getMaps();
         System.out.println("小车的行车轨迹为：");
-        printMap(maps);
+        printMap(finalMaps);
+
+        Stack<Node> path = astar.getPath();
+
+        while (!path.isEmpty())
+        {
+            Node top=path.pop();
+            System.out.println(top.coord.x+" "+top.coord.y);
+            System.out.println(FuzzySet.nearsetBar(maps,top));
+        }
     }
 
     /**

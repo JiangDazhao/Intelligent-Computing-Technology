@@ -17,4 +17,8 @@ public class MapInfo
         this.start = start;
         this.end = end;
     }
+
+    public int[][] getMaps() {
+        return maps;
+    }
 }

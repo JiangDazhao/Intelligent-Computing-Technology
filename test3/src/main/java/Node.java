@@ -28,10 +28,11 @@ public class Node implements Comparable<Node>{
     }
 
 
-    @Override
+
     /**
      * 升序排列
      */
+    @Override
     public int compareTo(Node o) {
         if (o==null) {
             return -1;
