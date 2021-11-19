@@ -26,7 +26,27 @@ public class FuzzySet {
             {1,0.1,0.25,0.25,0.2},
     };
 
-    double [][] MIX_SPEED= mixRelation(DIS_SPEED,CUR_SPEED);
+
+    static double [][] MIX_SPEED= mixRelation(DIS_SPEED,CUR_SPEED);
+
+    /**
+     * 根据曲率和距离障碍物远近判断行车速度
+     * @param maps
+     * @param node1
+     * @param node2
+     * @return
+     */
+    static int judgeSpeed(int [][]maps,Node node1,Node node2)
+    {
+        int result=0;
+        int nearestValue=nearsetBar(maps,node1);
+        //System.out.println("nearestValue: "+nearestValue);
+        Matrix disVector=getDisVector(nearestValue);
+        Matrix curVector=getCurveVector(node1.coord,node2.coord);
+        Matrix matrixInput=getMixInput(disVector,curVector);
+        result=getSpeed(matrixInput,new Matrix(MIX_SPEED));
+        return result;
+    }
 
     /**
      * 联合模糊矩阵
@@ -34,7 +54,7 @@ public class FuzzySet {
      * @param curSpeed
      * @return
      */
-    private double [][] mixRelation(double[][] disSpeed,double[][] curSpeed){
+    public static double [][] mixRelation(double[][] disSpeed,double[][] curSpeed){
         double[][]result =new double[disSpeed.length][disSpeed[0].length];
         for(int i=0;i<disSpeed.length;i++)
         {
@@ -111,4 +131,42 @@ public class FuzzySet {
         return new Matrix(result);
     }
 
+    /**
+     * 得到混合的输入条件模糊向量
+     * @param a
+     * @param b
+     * @return
+     */
+    static Matrix getMixInput(Matrix a,Matrix b)
+    {
+        double [][]result = new double[a.getRowDimension()][a.getColumnDimension()];
+        for(int i=0;i<a.getColumnDimension();i++)
+        {
+            result[0][i]=Math.max(a.get(0,i),b.get(0,i));
+        }
+        return new Matrix(result);
+    }
+
+    /**
+     * 决策得出最终速度
+     * @param input
+     * @param relation
+     * @return
+     */
+    static int getSpeed(Matrix input,Matrix relation)
+    {
+        Matrix result;
+        result=input;
+        result=input.times(relation);
+        double maxValue=0;
+        int maxIndex=0;
+        for(int i=0;i<result.getColumnDimension();i++){
+            if (result.get(0,i)>maxValue)
+            {
+                maxValue=result.get(0,i);
+                maxIndex=i;
+            }
+        }
+        return maxIndex+1;
+    }
 }

@@ -75,7 +75,7 @@ public class Astar {
                 this.path.push(end);
             }
         }
-        System.out.println("行车总代价为："+result);
+        System.out.println("The total cost is: "+result);
     }
 
     /**
